@@ -3,7 +3,7 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.12.5
-    working_directory: /go/src/github.com/toliger/postfix_exporter
+    working_directory: /go/src/github.com/toliger/prometheus_postfix_exporter
     environment:
       GO111MODULE: "on"
       GOBIN: "/go/bin"
@@ -18,7 +18,7 @@ jobs:
   publish_master:
     docker:
       - image: circleci/golang:1.12.5
-    working_directory: /go/src/github.com/toliger/postfix_exporter
+    working_directory: /go/src/github.com/toliger/prometheus_postfix_exporter
     environment:
       GOBIN: "/go/bin"
     steps:
@@ -26,17 +26,17 @@ jobs:
       - setup_remote_docker:
           version: 17.07.0-ce
       - run: make build
-      - run: mkdir .build && mv postfix_exporter .build/
+      - run: mkdir .build && mv prometheus_postfix_exporter .build/
       - store_artifacts:
           path: .build
       - run: docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
-      - run: docker tag postfix_exporter oligertimothee/postfix_exporter:master
-      - run: docker push oligertimothee/postfix_exporter:master
+      - run: docker tag prometheus_postfix_exporter oligertimothee/prometheus_postfix_exporter:master
+      - run: docker push oligertimothee/prometheus_postfix_exporter:master
 
   publish_release:
     docker:
       - image: circleci/golang:1.12.5
-    working_directory: /go/src/github.com/toliger/postfix_exporter
+    working_directory: /go/src/github.com/toliger/prometheus_postfix_exporter
     environment:
       GO111MODULE: "on"
       GOBIN: "/go/bin"
@@ -45,7 +45,7 @@ jobs:
       - setup_remote_docker:
           version: 17.07.0-ce
       - run: make build
-      - run: mkdir .build && mv postfix_exporter .build/
+      - run: mkdir .build && mv prometheus_postfix_exporter .build/
       - store_artifacts:
           path: .build
       - run:
@@ -54,12 +54,12 @@ jobs:
             go get github.com/tcnksm/ghr
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} --name "Version $CIRCLE_TAG" $CIRCLE_TAG .build/
       - run: docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
-      - run: docker tag postfix_exporter oligertimothee/postfix_exporter:latest
-      - run: docker push oligertimothee/postfix_exporter:latest
+      - run: docker tag prometheus_postfix_exporter oligertimothee/prometheus_postfix_exporter:latest
+      - run: docker push oligertimothee/prometheus_postfix_exporter:latest
 
 workflows:
   version: 2
-  postfix_exporter:
+  prometheus_postfix_exporter:
     jobs:
     - test:
         filters:
