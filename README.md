@@ -37,3 +37,7 @@ You can easily build the app with:
 ```
 make build
 ```
+
+## Credits
+
+This project is a fork of [this project](https://github.com/kumina/postfix_exporter)
